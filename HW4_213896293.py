@@ -39,6 +39,8 @@ def encode(text, start_key, repeat_mark=REPEAT_MARK, seed = None):
     out = []
     for ch in text:
         is_upper = ch.isalpha() and ch.isupper()
+        if ch == "\n":
+            out.append("\n")
         t = " " if ch == " " else ch.upper()
         if t in POS:
             if is_upper:
@@ -120,5 +122,5 @@ def decode_file(input_path, start_key):
     print(f"Decoded '{input_path}' -> '{output_path}'")
     return output_path
 
-encode_file("test/harryPotter.txt", "p")
-decode_file("test/harryPotter_ciphered.txt", "p")
+# encode_file("test/harryPotter.txt", "p")
+# decode_file("test/harryPotter_ciphered.txt", "p")
