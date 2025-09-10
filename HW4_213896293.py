@@ -27,9 +27,7 @@ def _delta(src, dst, direction):
         return ver + hor
 
 
-def encode(text, start_key, repeat_mark=REPEAT_MARK, seed = None):
-    if seed is not None:
-        random.seed(seed)
+def encode(text, start_key, repeat_mark=REPEAT_MARK):
 
     direction = random.choice(("H", "V"))
     cur = start_key.upper()
@@ -39,8 +37,6 @@ def encode(text, start_key, repeat_mark=REPEAT_MARK, seed = None):
     out = []
     for ch in text:
         is_upper = ch.isalpha() and ch.isupper()
-        if ch == "\n":
-            out.append("\n")
         t = " " if ch == " " else ch.upper()
         if t in POS:
             if is_upper:
@@ -57,6 +53,9 @@ def encode(text, start_key, repeat_mark=REPEAT_MARK, seed = None):
 
 def decode(cipher, start_key, repeat_mark=REPEAT_MARK):
     cur = start_key.upper()
+    if cur not in POS:
+        print("start key" + start_key + " not valid, start key initialized to 'A' ")
+        cur = "A"
     plain = []
     tokens = cipher.split()
     upper_next = False
@@ -90,14 +89,14 @@ def decode(cipher, start_key, repeat_mark=REPEAT_MARK):
                 cur = ch
     return "".join(plain)
 
-def encode_file(input_path, start_key, seed=None):
+def encode_file(input_path, start_key):
     try:
         with open(input_path) as f:
             text = f.read()
     except FileNotFoundError:
         print(input_path + " not found")
         return None, None
-    cipher, direction = encode(text, start_key=start_key, seed=seed)
+    cipher, direction = encode(text, start_key=start_key)
     base, ext = os.path.splitext(input_path)
     output_path = base + "_ciphered" + ext
 
@@ -122,5 +121,5 @@ def decode_file(input_path, start_key):
     print(f"Decoded '{input_path}' -> '{output_path}'")
     return output_path
 
-# encode_file("test/harryPotter.txt", "p")
-# decode_file("test/harryPotter_ciphered.txt", "p")
+encode_file("test/harryPotter.txt", "l")
+decode_file("test/harryPotter_ciphered.txt", "l")
